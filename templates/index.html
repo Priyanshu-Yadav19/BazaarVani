@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BazaarVani Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js" charset="utf-8"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        {% if not result and not error %}
+        <!-- Landing View Header (Image 4) -->
+        <div class="landing-view">
+            <div class="landing-header">
+                <div class="logo-large">
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; margin-right: 8px;">
+                      <defs>
+                        <linearGradient id="starGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stop-color="#FFD700" />
+                          <stop offset="100%" stop-color="#FF8C00" />
+                        </linearGradient>
+                      </defs>
+                      <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" fill="url(#starGradient)"/>
+                      <path d="M5 2L5.8 4.2L8 5L5.8 5.8L5 8L4.2 5.8L2 5L4.2 4.2L5 2Z" fill="url(#starGradient)"/>
+                      <path d="M19 16L19.8 18.2L22 19L19.8 19.8L19 22L18.2 19.8L16 19L18.2 18.2L19 16Z" fill="url(#starGradient)"/>
+                    </svg>
+                    BazaarVani
+                </div>
+                <p class="subtitle-large">AI-POWERED MARKET INTELLIGENCE</p>
+            </div>
+
+            <div class="landing-card card">
+                <div class="category-tabs" id="categoryTabs">
+                    <button class="tab-btn active" type="button" onclick="selectTab(this)"><span class="tab-icon">✔</span> Stocks</button>
+                    <button class="tab-btn" type="button" onclick="selectTab(this)"><span class="tab-icon" style="color:#ffaa00">●</span> Commodities</button>
+                    <button class="tab-btn" type="button" onclick="selectTab(this)">Indices</button>
+                    <button class="tab-btn" type="button" onclick="selectTab(this)"><span class="tab-icon">🏛</span> Funds</button>
+                    <button class="tab-btn" type="button" onclick="selectTab(this)"><span class="tab-icon" style="color:#0088ff">🛡</span> ETFs</button>
+                </div>
+                
+                <div class="quick-picks">
+                    <span class="quick-pill" onclick="document.querySelector('.main-ticker-input').value = 'TCS.NS'">TCS</span>
+                    <span class="quick-pill" onclick="document.querySelector('.main-ticker-input').value = 'RELIANCE.NS'">Reliance</span>
+                    <span class="quick-pill" onclick="document.querySelector('.main-ticker-input').value = 'INFY.NS'">Infosys</span>
+                    <span class="quick-pill" onclick="document.querySelector('.main-ticker-input').value = 'HDFCBANK.NS'">HDFC Bank</span>
+                    <span class="quick-pill" onclick="document.querySelector('.main-ticker-input').value = 'AAPL'">Apple</span>
+                    <span class="quick-pill" onclick="document.querySelector('.main-ticker-input').value = 'MSFT'">Microsoft</span>
+                    <span class="quick-pill" onclick="document.querySelector('.main-ticker-input').value = 'TSLA'">Tesla</span>
+                    <span class="quick-pill" onclick="document.querySelector('.main-ticker-input').value = 'GOOGL'">Alphabet</span>
+                </div>
+                
+                <hr class="divider">
+                
+                <form action="/" method="POST" id="landingForm" class="landing-form">
+                    <div class="form-grid">
+                        <div class="form-group ticker-group" style="grid-area: ticker;">
+                            <label>TICKER SYMBOL</label>
+                            <input type="text" name="ticker" placeholder="ADANI" required class="main-ticker-input" value="ADANIGREEN.NS">
+                        </div>
+                        
+                        <div class="form-group" style="grid-area: currency;">
+                            <label>DISPLAY CURRENCY</label>
+                            <select class="secondary-select" name="currency">
+                                <option value="auto">Auto (Native)</option>
+                                <option value="usd">USD ($)</option>
+                                <option value="inr">INR (₹)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group" style="grid-area: lookback;">
+                            <label>LOOKBACK DAYS</label>
+                            <input type="number" name="lookback_days" value="365" class="secondary-input" placeholder="e.g. 365" required min="10" max="1000">
+                        </div>
+                        
+                        <div class="form-group" style="grid-area: predict;">
+                            <label>PREDICTION DAYS</label>
+                            <input type="number" name="prediction_days" value="7" class="secondary-input" placeholder="e.g. 7" required min="1" max="100">
+                        </div>
+                        
+                        <div class="form-group submit-group" style="grid-area: button;">
+                            <button type="submit" class="btn-landing-submit">INITIALIZE<br>ANALYSIS</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% else %}
+        <!-- Market Identification Header (Image 3) -->
+        <header class="top-header card">
+            <div class="header-left">
+                <span class="small-label">MARKET IDENTIFICATION</span>
+                <div class="company-info">
+                    <div class="logo-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" fill="#ff4785"/>
+                        </svg>
+                    </div>
+                    <h1>{{ ticker }} Market Analysis</h1>
+                </div>
+            </div>
+            
+            <form action="/" method="POST" id="predictForm" class="header-right">
+                <span class="small-label">TICKER SYMBOL</span>
+                <div class="search-pill">
+                    <input type="text" name="ticker" value="{{ ticker }}" required placeholder="e.g. ADANIGREEN.NS">
+                    <button type="submit" class="btn-search">🔍</button>
+                    <input type="hidden" name="prediction_days" value="{{ prediction_days }}">
+                    <input type="hidden" name="lookback_days" value="{{ lookback_days }}">
+                </div>
+            </form>
+        </header>
+
+        {% if error %}
+        <div class="error-card card">
+            <h3>Error Encountered</h3>
+            <p>{{ error }}</p>
+        </div>
+        {% elif result %}
+        <div class="main-content">
+            <div class="left-col">
+                <!-- AI Recommendation (Image 3) -->
+                <div class="recommendation-row">
+                    <h2>AI Recommendation</h2>
+                    {% set rec = result.recommendation | lower %}
+                    <div class="btn-rec btn-{{ rec }}">{{ result.recommendation }}</div>
+                </div>
+                
+                <!-- Main Charts -->
+                <div class="chart-card card">
+                    <h3 class="chart-title pink-text">{{ ticker }} Historical Market Trajectory</h3>
+                    <div id="live-chart" class="chart-box"></div>
+                </div>
+
+                <div class="chart-card card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-right: 20px;">
+                        <h3 class="chart-title pink-text">{{ ticker }} Projected AI Trajectory</h3>
+                        <span style="font-size: 11px; font-weight: 800; color: #fff; background: var(--pink-accent); padding: 4px 12px; border-radius: 20px; letter-spacing: 1px;">AI MODEL: {{ result.best_model | upper }}</span>
+                    </div>
+                    <div id="future-chart" class="chart-box"></div>
+                </div>
+            </div>
+            
+            <div class="right-col">
+                <!-- Sentiment Analysis (Image 3) -->
+                <div class="card sentiment-card">
+                    <h3>Sentiment Analysis</h3>
+                    <div class="sentiment-table">
+                        <div class="sentiment-row">
+                            <span class="row-label">CURRENT PRICE</span>
+                            <span class="row-value pink-text">{{ result.currency }}{{ result.current_price }}</span>
+                        </div>
+                        <div class="sentiment-row">
+                            <span class="row-label">GLOBAL SCORE</span>
+                            <span class="row-value pink-text">{{ result.sentiment_score }}</span>
+                        </div>
+                        <div class="sentiment-row border-zero">
+                            <span class="row-label">MARKET OUTLOOK</span>
+                            <span class="row-value {{ 'green-text' if result.sentiment_score > 0.05 else 'red-text' if result.sentiment_score < -0.05 else 'orange-text' }}">
+                                {{ 'BULLISH' if result.sentiment_score > 0.05 else 'BEARISH' if result.sentiment_score < -0.05 else 'NEUTRAL' }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Market Vitals (Image 1) -->
+                <div class="card vitals-card">
+                    <h3>Market Vitals</h3>
+                    <div class="vitals-grid">
+                        <div class="vital-item">
+                            <span class="vital-icon">💼</span>
+                            <div class="vital-info">
+                                <span class="vital-label">MARKET CAP</span>
+                                <span class="vital-value">₹1.41T</span>
+                            </div>
+                        </div>
+                        <div class="vital-item">
+                            <span class="vital-icon">📊</span>
+                            <div class="vital-info">
+                                <span class="vital-label">P/E RATIO</span>
+                                <span class="vital-value">99.87</span>
+                            </div>
+                        </div>
+                        <div class="vital-item">
+                            <span class="vital-icon">📈</span>
+                            <div class="vital-info">
+                                <span class="vital-label">52W HIGH</span>
+                                <span class="vital-value">₹1,177.55</span>
+                            </div>
+                        </div>
+                        <div class="vital-item">
+                            <span class="vital-icon">📉</span>
+                            <div class="vital-info">
+                                <span class="vital-label">52W LOW</span>
+                                <span class="vital-value">₹765.00</span>
+                            </div>
+                        </div>
+                        <div class="vital-item">
+                            <span class="vital-icon">💰</span>
+                            <div class="vital-info">
+                                <span class="vital-label">DIVIDEND YIELD</span>
+                                <span class="vital-value">N/A</span>
+                            </div>
+                        </div>
+                        <div class="vital-item">
+                            <span class="vital-icon">🔊</span>
+                            <div class="vital-info">
+                                <span class="vital-label">DAY VOLUME</span>
+                                <span class="vital-value">2.22M</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Market Feed (Image 3) -->
+                <div class="card news-card">
+                    <h3>Live Market Feed</h3>
+                    <div class="news-list">
+                        <ul>
+                            {% for n in result.news %}
+                            <li>{{ n }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            const liveChartLog = {{ result.plot_data | safe }};
+            const futureChartLog = {{ result.future_plot_data | safe }};
+            
+            // Adjust layouts for better light mode view
+            liveChartLog.layout.paper_bgcolor = 'rgba(0,0,0,0)';
+            liveChartLog.layout.plot_bgcolor = 'rgba(0,0,0,0)';
+            
+            futureChartLog.layout.paper_bgcolor = 'rgba(0,0,0,0)';
+            futureChartLog.layout.plot_bgcolor = 'rgba(0,0,0,0)';
+
+            Plotly.newPlot('live-chart', liveChartLog.data, liveChartLog.layout, {responsive: true, displayModeBar: false});
+            Plotly.newPlot('future-chart', futureChartLog.data, futureChartLog.layout, {responsive: true, displayModeBar: false});
+            {% endif %}
+        </script>
+        {% endif %}
+        
+        <script>
+            function selectTab(clickedBtn) {
+                // Remove active class from all tabs
+                const tabs = document.querySelectorAll('.tab-btn');
+                tabs.forEach(tab => {
+                    tab.classList.remove('active');
+                    // Reset stock checkmark if it exists
+                    if (tab.innerText.includes('Stocks')) {
+                        tab.innerHTML = '<span class="tab-icon" style="color:#ffaa00">●</span> Stocks';
+                    }
+                });
+                
+                // Add active class to clicked tab
+                clickedBtn.classList.add('active');
+                
+                // Update icon for the specifically active tab to a checkmark if needed
+                const iconSpan = clickedBtn.querySelector('.tab-icon');
+                if (iconSpan) {
+                    iconSpan.innerText = '✔';
+                    iconSpan.style.color = '';
+                }
+            }
+        </script>
+    </div>
+</body>
+</html>

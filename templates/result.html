@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ result.ticker }} - Stock Prediction Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container result-container">
+        <header>
+            <div class="back-link">
+                <a href="/">&larr; Back to Analyst</a>
+            </div>
+            <h1>Analysis for <span class="highlight">{{ result.ticker }}</span></h1>
+        </header>
+
+        <div class="results-grid">
+            <div class="card summary-card">
+                <h2>Recommendation</h2>
+                <div class="recommendation-badge {{ result.recommendation | lower }}">
+                    {{ result.recommendation }}
+                </div>
+                <div class="metrics">
+                    <div class="metric">
+                        <span class="metric-label">Current Price</span>
+                        <span class="metric-value">{{ result.current_price }}</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Sentiment Score</span>
+                        <span class="metric-value {{ 'positive' if result.sentiment_score > 0 else 'negative' if result.sentiment_score < 0 else 'neutral' }}">{{ result.sentiment_score }}</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Best Model</span>
+                        <span class="metric-value">{{ result.best_model }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card chart-card">
+                <h2>Price History & Chart</h2>
+                <img src="data:image/png;base64,{{ result.plot_data }}" alt="Stock Price Chart" class="stock-chart">
+            </div>
+
+            <div class="card prediction-card">
+                <h2>Future Predictions</h2>
+                <ul class="prediction-list">
+                    {% for price in result.predictions %}
+                    <li>
+                        <span class="day">Day {{ loop.index }}</span>
+                        <span class="price">{{ price }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
