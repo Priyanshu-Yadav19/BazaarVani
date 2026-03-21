@@ -29,7 +29,7 @@ load_dotenv()
 POLYGON_API_KEY = os.getenv("POLYGON_API_KEY", "")
 FINNHUB_API_KEY = os.getenv("FINNHUB_API_KEY", "")
 NEWSAPI_KEY = os.getenv("NEWSAPI_KEY", "")
-ALPHA_VANTAGE_API_KEY = os.getenv("ALPHA_VANTAGE_API_KEY", "UY5BRNKXX9YBBBGW") # Demo API fallback
+ALPHA_VANTAGE_API_KEY = os.getenv("ALPHA_VANTAGE_API_KEY", "")
 
 def fetch_data(ticker, lookback_days):
     try:
