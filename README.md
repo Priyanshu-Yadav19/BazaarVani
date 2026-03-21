@@ -12,7 +12,11 @@ BazaarVani is an **AI-Powered Market Intelligence Dashboard** that predicts futu
 
 ### 1. Clone the repository
 ```bash
+<<<<<<< HEAD
 git clone https://github.com/Priyanshu-Yadav19/BazaarVani
+=======
+git clone https://github.com/Priyanshu-Yadav19/BazaarVani.git
+>>>>>>> 30f811453ba6736d88e8d26be4370e488473f407
 cd BazaarVani
 ```
 
@@ -49,3 +53,7 @@ python app.py
 ```
 Open your web browser and navigate to `http://127.0.0.1:5000` to begin your analysis!
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 30f811453ba6736d88e8d26be4370e488473f407
